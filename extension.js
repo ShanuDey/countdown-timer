@@ -49,13 +49,12 @@ function activate(context) {
   context.subscriptions.push(statusBar);
 
   // update status bar once start
-  updateStatusBar();
+  // updateStatusBar();
 }
 
-function updateStatusBar() {
-  let date = new Date();
-  console.log('Current Date Time : ' + date.toLocaleTimeString());
-  statusBar.text = date.toLocaleTimeString();
+function updateStatusBar(text) {
+  statusBar.text = `Countdown: ${text}`;
+  console.log(statusBar.text);
   statusBar.show();
 }
 
@@ -114,6 +113,8 @@ function manageTimer(targetTime) {
   const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
   console.log('manager Timer:', timeDifference, hours, minutes, seconds);
+  const timeRemaining = `${hours}h ${minutes}m ${seconds}s`;
+  updateStatusBar(timeRemaining);
 }
 
 // this method is called when your extension is deactivated
