@@ -2,6 +2,7 @@
   "name": "Countdown Timer",
   "displayName": "countdown-timer",
   "description": "It is a countdown timer for better productivity",
+  "icon": "images/countdown-timer-logo.png",
   "publisher": "ShanuDey",
   "repository": {
     "type": "git",
