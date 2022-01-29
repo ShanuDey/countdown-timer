@@ -10,7 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:countdown-timer.activate"
+    "*"
   ],
   "main": "./extension.js",
   "contributes": {
