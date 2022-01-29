@@ -3,6 +3,10 @@
   "displayName": "countdown-timer",
   "description": "It is a countdown timer for better productivity",
   "publisher": "ShanuDey",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShanuDey/countdown-timer.git"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.63.0"
