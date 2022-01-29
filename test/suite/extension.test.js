@@ -61,6 +61,10 @@ suite('Countdown Timer Test Suite: validateTime function', () => {
       extension.validateTime('24:01:00'),
       'Hours are more than 24!! More than a day is not supported yet.'
     );
+    assert.strictEqual(
+      extension.validateTime('00:00:00'),
+      'OMG!! All zeros. It is already expired'
+    );
     assert.strictEqual(extension.validateTime('24:00:00'), null);
   });
 });

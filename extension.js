@@ -75,6 +75,8 @@ const validateTime = (inputTime) => {
     return 'Hours are more than 24!! More than a day is not supported yet.';
   if (hh === 24 && mm > 0 && ss >= 0)
     return 'Hours are more than 24!! More than a day is not supported yet.';
+  if (hh === 0 && mm === 0 && ss === 0)
+    return 'OMG!! All zeros. It is already expired';
 
   // if all test passed then return null
   return null;
@@ -89,7 +91,7 @@ async function getUserInput(placeHolderText, validateInputFunction) {
     // valueSelection: [2, 4],
     placeHolder: placeHolderText,
     validateInput: (text) => {
-      validateInputFunction(text);
+      return validateInputFunction(text);
     },
   });
   vscode.window.showInformationMessage(`Got: ${result}`);
