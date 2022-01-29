@@ -1,5 +1,9 @@
 # countdown-timer README
 
+[![Extension testing](https://github.com/ShanuDey/countdown-timer/actions/workflows/test.yml/badge.svg)](https://github.com/ShanuDey/countdown-timer/actions/workflows/test.yml)
+[![Test and Deploy Extension](https://github.com/ShanuDey/countdown-timer/actions/workflows/deploy.yml/badge.svg)](https://github.com/ShanuDey/countdown-timer/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A vscode extension for better productivity and time management.
 
 ## Features
