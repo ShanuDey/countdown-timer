@@ -3,6 +3,7 @@
 const vscode = require('vscode');
 
 let statusBar;
+let timerIntervalId;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -36,7 +37,7 @@ function activate(context) {
         'HH:MM:SS in 24 hours format. Example: 00:30:00',
         validateTime
       );
-      console.log(userInput);
+      manageTimer(userInput);
     }
   );
   context.subscriptions.push(setTimerRegisterCommand);
@@ -54,7 +55,7 @@ function activate(context) {
 
 function updateStatusBar(text) {
   statusBar.text = `Countdown: ${text}`;
-  console.log(statusBar.text);
+  // console.log(statusBar.text);
   statusBar.show();
 }
 
@@ -98,23 +99,32 @@ async function getUserInput(placeHolderText, validateInputFunction) {
 }
 
 function manageTimer(targetTime) {
-  const currentDate = new Date();
   const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
   let targetDate = new Date();
-  targetDate.setHours(hh);
-  targetDate.setMinutes(mm);
-  targetDate.setSeconds(ss);
-
-  const timeDifference = targetDate - currentDate;
-
-  const hours = Math.floor(
-    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  console.log('manager Timer:', timeDifference, hours, minutes, seconds);
-  const timeRemaining = `${hours}h ${minutes}m ${seconds}s`;
-  updateStatusBar(timeRemaining);
+  targetDate.setHours(targetDate.getHours() + hh);
+  targetDate.setMinutes(targetDate.getMinutes() + mm);
+  targetDate.setSeconds(targetDate.getSeconds() + ss);
+  timerIntervalId = setInterval(() => {
+    const currentDate = new Date();
+    const timeDifference = targetDate - currentDate;
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    // console.log('manager Timer:', timeDifference, hours, minutes, seconds);
+    if (timeDifference < 0) {
+      clearInterval(timerIntervalId);
+      vscode.window.showInformationMessage(
+        'Countdown Timer: Expired \n 🎉🎉 Congratulation 🎉🎉'
+      );
+      statusBar.hide();
+    } else {
+      updateStatusBar(`${hours}h ${minutes}m ${seconds}s`);
+    }
+  }, 1000);
 }
 
 // this method is called when your extension is deactivated
