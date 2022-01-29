@@ -98,6 +98,24 @@ async function getUserInput(placeHolderText, validateInputFunction) {
   return result;
 }
 
+function manageTimer(targetTime) {
+  const currentDate = new Date();
+  const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
+  let targetDate = new Date();
+  targetDate.setHours(hh);
+  targetDate.setMinutes(mm);
+  targetDate.setSeconds(ss);
+
+  const timeDifference = targetDate - currentDate;
+
+  const hours = Math.floor(
+    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+  console.log('manager Timer:', timeDifference, hours, minutes, seconds);
+}
+
 // this method is called when your extension is deactivated
 function deactivate() {}
 
