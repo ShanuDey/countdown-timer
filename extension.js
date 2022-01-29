@@ -56,6 +56,16 @@ function updateStatusBar() {
   statusBar.show();
 }
 
+function validationTime(inputTime) {
+  // checking the pattern is `dd:dd:dd` where d is digit
+  const pattern = /\d\d:\d\d:\d\d/g;
+  if (!pattern.test(inputTime))
+    return 'Invalid format!! Please enter time in HH:MM:SS format';
+
+  // if all test passed then return null
+  return null;
+}
+
 /**
  * Shows an input box to take user input
  */
@@ -78,4 +88,5 @@ function deactivate() {}
 module.exports = {
   activate,
   deactivate,
+  validationTime,
 };
