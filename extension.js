@@ -62,6 +62,17 @@ function validationTime(inputTime) {
   if (!pattern.test(inputTime))
     return 'Invalid format!! Please enter time in HH:MM:SS format';
 
+  // checking part wise
+  const [hh, mm, ss] = inputTime.split(':').map((str) => parseInt(str));
+  if (ss > 59) return 'Seconds are more than 59!! Add Minutes instead';
+  if (mm > 59) return 'Minutes are more than 59!! Add Hours instead';
+  if (hh > 24)
+    return 'Hours are more than 24!! More than a day is not supported yet.';
+  if (hh === 24 && mm >= 0 && ss > 0)
+    return 'Hours are more than 24!! More than a day is not supported yet.';
+  if (hh === 24 && mm > 0 && ss >= 0)
+    return 'Hours are more than 24!! More than a day is not supported yet.';
+
   // if all test passed then return null
   return null;
 }
