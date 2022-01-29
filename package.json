@@ -2,6 +2,7 @@
   "name": "countdown-timer",
   "displayName": "countdown-timer",
   "description": "It is a countdown timer for better productivity",
+  "publisher": "ShanuDey",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.63.0"
@@ -17,11 +18,11 @@
     "commands": [
       {
         "command": "countdown-timer.activate",
-        "title": "CountdonTimer: Activate Countdown Timer"
+        "title": "CountdownTimer: Activate Countdown Timer"
       },
       {
         "command": "countdown-timer.settimer",
-        "title": "CountdonTimer: Set Countdown Timer"
+        "title": "CountdownTimer: Set Countdown Timer"
       }
     ]
   },
