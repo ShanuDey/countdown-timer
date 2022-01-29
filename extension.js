@@ -31,8 +31,12 @@ function activate(context) {
 
   const setTimerRegisterCommand = vscode.commands.registerCommand(
     setTimerCommandId,
-    function () {
-      showInputBox();
+    async function () {
+      const userInput = await getUserInput(
+        'HH:MM:SS in 24 hours format. Example: 00:30:00',
+        validateTime
+      );
+      console.log(userInput);
     }
   );
   context.subscriptions.push(setTimerRegisterCommand);
@@ -46,7 +50,6 @@ function activate(context) {
 
   // update status bar once start
   updateStatusBar();
-  showInputBox();
 }
 
 function updateStatusBar() {
@@ -56,7 +59,7 @@ function updateStatusBar() {
   statusBar.show();
 }
 
-function validationTime(inputTime) {
+const validateTime = (inputTime) => {
   // checking the pattern is `dd:dd:dd` where d is digit
   const pattern = /\d\d:\d\d:\d\d/g;
   if (!pattern.test(inputTime))
@@ -75,22 +78,22 @@ function validationTime(inputTime) {
 
   // if all test passed then return null
   return null;
-}
+};
 
 /**
  * Shows an input box to take user input
  */
-async function showInputBox() {
+async function getUserInput(placeHolderText, validateInputFunction) {
   const result = await vscode.window.showInputBox({
     // value: 'abcdef',
-    valueSelection: [2, 4],
-    placeHolder: 'HH:MM:SS in 24 hours format. Example: 00:30:00',
+    // valueSelection: [2, 4],
+    placeHolder: placeHolderText,
     validateInput: (text) => {
-      vscode.window.showInformationMessage(`Validating: ${text}`);
-      return text === '123' ? 'Not 123!' : null;
+      validateInputFunction(text);
     },
   });
   vscode.window.showInformationMessage(`Got: ${result}`);
+  return result;
 }
 
 // this method is called when your extension is deactivated
@@ -99,5 +102,5 @@ function deactivate() {}
 module.exports = {
   activate,
   deactivate,
-  validationTime,
+  validateTime,
 };
