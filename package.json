@@ -17,7 +17,11 @@
     "commands": [
       {
         "command": "countdown-timer.activate",
-        "title": "Activate Countdown Timer"
+        "title": "CountdonTimer: Activate Countdown Timer"
+      },
+      {
+        "command": "countdown-timer.settimer",
+        "title": "CountdonTimer: Set Countdown Timer"
       }
     ]
   },

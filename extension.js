@@ -15,6 +15,7 @@ function activate(context) {
   console.log('"countdown-timer" extension is now active!');
 
   const commandId = 'countdown-timer.activate';
+  const setTimerCommandId = 'countdown-timer.settimer';
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
@@ -28,6 +29,14 @@ function activate(context) {
   });
   context.subscriptions.push(disposable);
 
+  const setTimerRegisterCommand = vscode.commands.registerCommand(
+    setTimerCommandId,
+    function () {
+      showInputBox();
+    }
+  );
+  context.subscriptions.push(setTimerRegisterCommand);
+
   // create a new status bar item that we can now manage
   statusBar = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
@@ -37,6 +46,7 @@ function activate(context) {
 
   // update status bar once start
   updateStatusBar();
+  showInputBox();
 }
 
 function updateStatusBar() {
@@ -44,6 +54,22 @@ function updateStatusBar() {
   console.log('Current Date Time : ' + date.toLocaleTimeString());
   statusBar.text = date.toLocaleTimeString();
   statusBar.show();
+}
+
+/**
+ * Shows an input box to take user input
+ */
+async function showInputBox() {
+  const result = await vscode.window.showInputBox({
+    // value: 'abcdef',
+    valueSelection: [2, 4],
+    placeHolder: 'HH:MM:SS in 24 hours format. Example: 00:30:00',
+    validateInput: (text) => {
+      vscode.window.showInformationMessage(`Validating: ${text}`);
+      return text === '123' ? 'Not 123!' : null;
+    },
+  });
+  vscode.window.showInformationMessage(`Got: ${result}`);
 }
 
 // this method is called when your extension is deactivated
