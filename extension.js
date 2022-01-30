@@ -119,6 +119,8 @@ async function getUserInput(placeHolderText, validateInputFunction) {
 }
 
 function manageTimer(targetTime) {
+  const statusbarVisibility = statusBar._visible;
+  if (statusbarVisibility === false) statusBar.show();
   const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
   let targetDate = new Date();
   targetDate.setHours(targetDate.getHours() + hh);
@@ -140,6 +142,8 @@ function manageTimer(targetTime) {
       vscode.window.showInformationMessage(
         'Countdown Timer: Expired \n 🎉🎉 Congratulation 🎉🎉'
       );
+      statusbarVisibility ? statusBar.show() : statusBar.hide();
+      updateStatusBar('Not set');
     } else {
       updateStatusBar(`${hours}h ${minutes}m ${seconds}s`);
     }
