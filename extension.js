@@ -64,8 +64,7 @@ const showStatusBarItemOnIdleCommand = vscode.commands.registerCommand(
 
 function createStatusBar() {
   statusBar = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100
+    vscode.StatusBarAlignment.Right
   );
   updateStatusBar('Not set');
   statusBar.show();
