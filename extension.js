@@ -4,6 +4,8 @@ const vscode = require('vscode');
 
 let statusBar;
 let timerIntervalId;
+const commandId = 'countdown-timer.activate';
+const setTimerCommandId = 'countdown-timer.settimer';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -11,52 +13,45 @@ let timerIntervalId;
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('"countdown-timer" extension is now active!');
-
-  const commandId = 'countdown-timer.activate';
-  const setTimerCommandId = 'countdown-timer.settimer';
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(commandId, function () {
-    // The code you place here will be executed every time your command is executed
-
-    // Display a message box to the user
-    vscode.window.showInformationMessage(
-      'Count Down timer extension is active now!'
-    );
-  });
   context.subscriptions.push(disposable);
-
-  const setTimerRegisterCommand = vscode.commands.registerCommand(
-    setTimerCommandId,
-    async function () {
-      const userInput = await getUserInput(
-        'HH:MM:SS in 24 hours format. Example: 00:30:00',
-        validateTime
-      );
-      manageTimer(userInput);
-    }
-  );
   context.subscriptions.push(setTimerRegisterCommand);
-
   // create a new status bar item that we can now manage
+  context.subscriptions.push(statusBar);
+}
+
+let disposable = vscode.commands.registerCommand(commandId, function () {
+  // Display a message box to the user
+  vscode.window.showInformationMessage(
+    'Count Down timer extension is active now!'
+  );
+});
+
+const setTimerRegisterCommand = vscode.commands.registerCommand(
+  setTimerCommandId,
+  async function () {
+    const userInput = await getUserInput(
+      'HH:MM:SS in 24 hours format. Example: 00:30:00',
+      validateTime
+    );
+    createStatusBar();
+    manageTimer(userInput);
+  }
+);
+
+function createStatusBar() {
   statusBar = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
   );
-  statusBar.command = commandId;
-  context.subscriptions.push(statusBar);
-
-  // update status bar once start
-  // updateStatusBar();
+  statusBar.show();
+  // statusBar.command = commandId;
 }
 
 function updateStatusBar(text) {
   statusBar.text = `Countdown: ${text}`;
   // console.log(statusBar.text);
-  statusBar.show();
 }
 
 const validateTime = (inputTime) => {
