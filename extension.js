@@ -94,7 +94,9 @@ async function getUserInput(placeHolderText, validateInputFunction) {
       return validateInputFunction(text);
     },
   });
-  vscode.window.showInformationMessage(`Got: ${result}`);
+  vscode.window.showInformationMessage(
+    `Countdown timer is set for ${result}  ⬇️`
+  );
   return result;
 }
 
