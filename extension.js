@@ -43,7 +43,8 @@ const setTimerRegisterCommand = vscode.commands.registerCommand(
 
 function createStatusBar() {
   statusBar = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right
+    vscode.StatusBarAlignment.Right,
+    100
   );
   statusBar.show();
   // statusBar.command = commandId;
