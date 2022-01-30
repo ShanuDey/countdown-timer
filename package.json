@@ -28,6 +28,10 @@
       {
         "command": "countdown-timer.settimer",
         "title": "CountdownTimer: Set Countdown Timer"
+      },
+      {
+        "command": "countdown-timer.hidestatusonidle",
+        "title": "CountdownTimer: Hide status bar item on idle"
       }
     ]
   },

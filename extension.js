@@ -6,6 +6,7 @@ let statusBar;
 let timerIntervalId;
 const commandId = 'countdown-timer.activate';
 const setTimerCommandId = 'countdown-timer.settimer';
+const hideStatusBarOnIdleCommandId = 'countdown-timer.hidestatusonidle';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -20,6 +21,10 @@ function activate(context) {
   context.subscriptions.push(setTimerRegisterCommand);
   // create a new status bar item that we can now manage
   context.subscriptions.push(statusBar);
+  context.subscriptions.push(hideStatusBarItemOnIdleCommand);
+
+  //on active
+  createStatusBar();
 }
 
 let disposable = vscode.commands.registerCommand(commandId, function () {
@@ -36,8 +41,14 @@ const setTimerRegisterCommand = vscode.commands.registerCommand(
       'HH:MM:SS in 24 hours format. Example: 00:30:00',
       validateTime
     );
-    createStatusBar();
     manageTimer(userInput);
+  }
+);
+
+const hideStatusBarItemOnIdleCommand = vscode.commands.registerCommand(
+  hideStatusBarOnIdleCommandId,
+  async function () {
+    statusBar.hide();
   }
 );
 
@@ -46,12 +57,13 @@ function createStatusBar() {
     vscode.StatusBarAlignment.Right,
     100
   );
+  updateStatusBar('Not set');
   statusBar.show();
-  // statusBar.command = commandId;
+  statusBar.command = setTimerCommandId;
 }
 
 function updateStatusBar(text) {
-  statusBar.text = `Countdown: ${text}`;
+  statusBar.text = `$(watch) ${text}`;
   // console.log(statusBar.text);
 }
 
