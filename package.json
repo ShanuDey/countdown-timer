@@ -32,6 +32,10 @@
       {
         "command": "countdown-timer.hidestatusonidle",
         "title": "CountdownTimer: Hide status bar item on idle"
+      },
+      {
+        "command": "countdown-timer.showstatusonidle",
+        "title": "CountdownTimer: Show status bar item on idle"
       }
     ]
   },
