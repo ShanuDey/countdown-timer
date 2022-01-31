@@ -36,6 +36,14 @@
       {
         "command": "countdown-timer.showstatusonidle",
         "title": "CountdownTimer: Show status bar item on idle"
+      },
+      {
+        "command": "countdown-timer.startpomodoro",
+        "title": "CountdownTimer: Start Pomodoro mode"
+      },
+      {
+        "command": "countdown-timer.stoppomodoro",
+        "title": "CountdownTimer: Stop Pomodoro mode"
       }
     ]
   },

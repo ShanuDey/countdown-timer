@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+const { clearInterval } = require('timers');
 const vscode = require('vscode');
 
 let statusBar;
@@ -7,6 +8,11 @@ const commandId = 'countdown-timer.activate';
 const setTimerCommandId = 'countdown-timer.settimer';
 const hideStatusBarOnIdleCommandId = 'countdown-timer.hidestatusonidle';
 const showStatusBarOnIdleCommandId = 'countdown-timer.showstatusonidle';
+const startPomodoroTimerCommandId = 'countdown-timer.startpomodoro';
+const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
+// const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
+let isPomodoroTimerActive = false;
+let pomodoroTimerIntervalId;
 
 const unitSeconds = 1000; // 1 sec = 1000 milliseconds
 let timeLeft = 0;
@@ -28,6 +34,8 @@ function activate(context) {
   context.subscriptions.push(statusBar);
   context.subscriptions.push(hideStatusBarItemOnIdleCommand);
   context.subscriptions.push(showStatusBarItemOnIdleCommand);
+  context.subscriptions.push(startPomodoroTimerCommand);
+  context.subscriptions.push(stopPomodoroTimerCommand);
 
   //on active
   createStatusBar();
@@ -65,6 +73,26 @@ const showStatusBarItemOnIdleCommand = vscode.commands.registerCommand(
   showStatusBarOnIdleCommandId,
   function () {
     statusBar.show();
+  }
+);
+
+const startPomodoroTimerCommand = vscode.commands.registerCommand(
+  startPomodoroTimerCommandId,
+  function () {
+    isPomodoroTimerActive = true;
+    pomodoroTimerIntervalId = setInterval(() => {
+      manageTimer('00:25:00');
+      // manageTimer('00:05:00');
+      console.log(pomodoroTimerIntervalId);
+    }, 1800000);
+  }
+);
+
+const stopPomodoroTimerCommand = vscode.commands.registerCommand(
+  stopPomodoroTimerCommandId,
+  function () {
+    isPomodoroTimerActive = false;
+    clearInterval(pomodoroTimerIntervalId);
   }
 );
 
