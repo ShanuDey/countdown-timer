@@ -13,6 +13,7 @@ const startPomodoroTimerCommandId = 'countdown-timer.startpomodoro';
 const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
 // const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
 let isPomodoroTimerActive = false;
+let isBreak = false;
 let pomodoroTimerIntervalId;
 
 // this method is called when your extension is activated
@@ -75,10 +76,13 @@ const startPomodoroTimerCommand = vscode.commands.registerCommand(
   function () {
     isPomodoroTimerActive = true;
     pomodoroTimerIntervalId = setInterval(() => {
-      manageTimer('00:25:00');
-      // manageTimer('00:05:00');
-      console.log(pomodoroTimerIntervalId);
-    }, 1800000);
+      // stop pomodoro when user stops it
+      // if (isPomodoroTimerActive === false) clearInterval(intervalId);
+
+      // toggle between break and focus mode
+      manageTimer(isBreak ? '00:00:25' : '00:00:05');
+      isBreak = !isBreak;
+    }, 30000);
   }
 );
 
@@ -179,6 +183,16 @@ function manageTimer(targetTime) {
 
 // this method is called when your extension is deactivated
 function deactivate() {}
+
+// const pomodoro = () => {
+//   // stop pomodoro when user stops it
+//   if (isPomodoroTimerActive === false) return;
+
+//   // toggle between break and focus mode
+//   manageTimer(isBreak ? '00:00:25' : '00:00:05');
+//   isBreak = !isBreak;
+//   pomodoro();
+// };
 
 module.exports = {
   activate,
