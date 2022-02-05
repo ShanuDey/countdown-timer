@@ -90,8 +90,8 @@ const startPomodoroTimerCommand = vscode.commands.registerCommand(
 const stopPomodoroTimerCommand = vscode.commands.registerCommand(
   stopPomodoroTimerCommandId,
   function () {
-    isPomodoroTimerActive = false;
     clearInterval(pomodoroTimerIntervalId);
+    updateStatusBar('Not Set');
   }
 );
 
