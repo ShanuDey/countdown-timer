@@ -13,6 +13,9 @@ const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
 // const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
 let isPomodoroTimerActive = false;
 let pomodoroTimerIntervalId;
+let isBreak = false;
+let WorkTime = 7;
+let BreakTime = 3;
 
 const unitSeconds = 1000; // 1 sec = 1000 milliseconds
 let timeLeft = 0;
@@ -80,11 +83,7 @@ const startPomodoroTimerCommand = vscode.commands.registerCommand(
   startPomodoroTimerCommandId,
   function () {
     isPomodoroTimerActive = true;
-    pomodoroTimerIntervalId = setInterval(() => {
-      manageTimer('00:25:00');
-      // manageTimer('00:05:00');
-      console.log(pomodoroTimerIntervalId);
-    }, 1800000);
+    pomodoroTimer();
   }
 );
 
@@ -182,6 +181,25 @@ const getCurrentTimeLeft = () => {
 const getTimeLeftInSeconds = (targetTime) => {
   const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
   return hh * 60 + mm * 60 + ss;
+};
+
+const pomodoroTimer = () => {
+  timeLeft = 7;
+  pomodoroTimerIntervalId = setInterval(() => {
+    if (timeLeft < 0) {
+      if (isBreak) {
+        timeLeft = WorkTime;
+        vscode.window.showInformationMessage(
+          'Countdown Timer: Focusing in work'
+        );
+      } else {
+        timeLeft = BreakTime;
+        vscode.window.showInformationMessage('Countdown Timer: Have a break');
+      }
+    }
+    updateStatusBar(getCurrentTimeLeft());
+    timeLeft--;
+  }, 1000);
 };
 
 module.exports = {
