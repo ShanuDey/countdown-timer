@@ -13,6 +13,8 @@ A vscode extension for better productivity and time management.
 - Set timer for countdown and focus on your productivity
 - Pop up a notification once countdown expirers. Take a break and come up with new ideas
 - show and hide commands added for the status bar item
+- Pomodoro timer included
+- Customize pomodoro timer with custom work and break time
 
 > Tip: This is a superb extension
 
@@ -26,6 +28,10 @@ It supports in all VS Code versions.
 - `countdown-timer.settimer`: Set timer time for countdown
 - `countdown-timer.hidestatusonidle`: Hide status bar item on idle
 - `countdown-timer.showstatusonidle`: Show status bar item on idle
+- `countdown-timer.startpomodoro`: Start Pomodoro mode
+- `countdown-timer.stoppomodoro`: Stop Pomodoro mode
+- `countdown-timer.update_pomodoro_work_time`: Update Pomodoro Work Time
+- `countdown-timer.update_pomodoro_break_time`: Update Pomodoro Break Time
 
 ## Known Issues
 
