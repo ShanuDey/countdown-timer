@@ -18,8 +18,8 @@ const updatePomodoroBreakTimeCommandId =
 let isPomodoroTimerActive = false;
 let pomodoroTimerIntervalId;
 let isBreak = false;
-let WorkTime = 7;
-let BreakTime = 3;
+let WorkTime = 1500; // 25 min
+let BreakTime = 300; // 5 min
 
 const unitSeconds = 1000; // 1 sec = 1000 milliseconds
 let timeLeft = 0;
