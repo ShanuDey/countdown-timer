@@ -88,7 +88,6 @@ const showStatusBarItemOnIdleCommand = vscode.commands.registerCommand(
 const startPomodoroTimerCommand = vscode.commands.registerCommand(
   startPomodoroTimerCommandId,
   function () {
-    isPomodoroTimerActive = true;
     pomodoroTimer();
   }
 );
