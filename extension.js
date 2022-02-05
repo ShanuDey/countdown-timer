@@ -4,7 +4,6 @@ const { clearInterval } = require('timers');
 const vscode = require('vscode');
 
 let statusBar;
-let timerIntervalId;
 const commandId = 'countdown-timer.activate';
 const setTimerCommandId = 'countdown-timer.settimer';
 const hideStatusBarOnIdleCommandId = 'countdown-timer.hidestatusonidle';
@@ -13,8 +12,14 @@ const startPomodoroTimerCommandId = 'countdown-timer.startpomodoro';
 const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
 // const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
 let isPomodoroTimerActive = false;
-let isBreak = false;
 let pomodoroTimerIntervalId;
+let isBreak = false;
+let WorkTime = 7;
+let BreakTime = 3;
+
+const unitSeconds = 1000; // 1 sec = 1000 milliseconds
+let timeLeft = 0;
+let timerIntervalId;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -38,6 +43,9 @@ function activate(context) {
   //on active
   createStatusBar();
 }
+
+// this method is called when your extension is deactivated
+function deactivate() {}
 
 let disposable = vscode.commands.registerCommand(commandId, function () {
   // Display a message box to the user
@@ -75,22 +83,15 @@ const startPomodoroTimerCommand = vscode.commands.registerCommand(
   startPomodoroTimerCommandId,
   function () {
     isPomodoroTimerActive = true;
-    pomodoroTimerIntervalId = setInterval(() => {
-      // stop pomodoro when user stops it
-      // if (isPomodoroTimerActive === false) clearInterval(intervalId);
-
-      // toggle between break and focus mode
-      manageTimer(isBreak ? '00:00:25' : '00:00:05');
-      isBreak = !isBreak;
-    }, 30000);
+    pomodoroTimer();
   }
 );
 
 const stopPomodoroTimerCommand = vscode.commands.registerCommand(
   stopPomodoroTimerCommandId,
   function () {
-    isPomodoroTimerActive = false;
     clearInterval(pomodoroTimerIntervalId);
+    updateStatusBar('Not Set');
   }
 );
 
@@ -152,47 +153,54 @@ async function getUserInput(placeHolderText, validateInputFunction) {
 function manageTimer(targetTime) {
   const statusbarVisibility = statusBar._visible;
   if (statusbarVisibility === false) statusBar.show();
-  const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
-  let targetDate = new Date();
-  targetDate.setHours(targetDate.getHours() + hh);
-  targetDate.setMinutes(targetDate.getMinutes() + mm);
-  targetDate.setSeconds(targetDate.getSeconds() + ss);
+  let currentTimeLeft;
+  timeLeft = getTimeLeftInSeconds(targetTime);
   timerIntervalId = setInterval(() => {
-    const currentDate = new Date();
-    const timeDifference = targetDate - currentDate;
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    // console.log('manager Timer:', timeDifference, hours, minutes, seconds);
-    if (timeDifference < 0) {
+    if (timeLeft < 0) {
       clearInterval(timerIntervalId);
+      updateStatusBar('Not Set');
       vscode.window.showInformationMessage(
         'Countdown Timer: Expired \n 🎉🎉 Congratulation 🎉🎉'
       );
       statusbarVisibility ? statusBar.show() : statusBar.hide();
-      updateStatusBar('Not set');
     } else {
-      updateStatusBar(`${hours}h ${minutes}m ${seconds}s`);
+      currentTimeLeft = getCurrentTimeLeft();
+      updateStatusBar(currentTimeLeft);
+      timeLeft--;
     }
   }, 1000);
 }
 
-// this method is called when your extension is deactivated
-function deactivate() {}
+const getCurrentTimeLeft = () => {
+  const hh = Math.floor(timeLeft / 3600);
+  const mm = Math.floor(timeLeft / 60);
+  const ss = Math.floor(timeLeft % 60);
+  return `${hh}h ${mm}m ${ss}s`;
+};
 
-// const pomodoro = () => {
-//   // stop pomodoro when user stops it
-//   if (isPomodoroTimerActive === false) return;
+const getTimeLeftInSeconds = (targetTime) => {
+  const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
+  return hh * 60 + mm * 60 + ss;
+};
 
-//   // toggle between break and focus mode
-//   manageTimer(isBreak ? '00:00:25' : '00:00:05');
-//   isBreak = !isBreak;
-//   pomodoro();
-// };
+const pomodoroTimer = () => {
+  timeLeft = 7;
+  pomodoroTimerIntervalId = setInterval(() => {
+    if (timeLeft < 0) {
+      if (isBreak) {
+        timeLeft = WorkTime;
+        vscode.window.showInformationMessage(
+          'Countdown Timer: Focusing in work'
+        );
+      } else {
+        timeLeft = BreakTime;
+        vscode.window.showInformationMessage('Countdown Timer: Have a break');
+      }
+    }
+    updateStatusBar(getCurrentTimeLeft());
+    timeLeft--;
+  }, 1000);
+};
 
 module.exports = {
   activate,
