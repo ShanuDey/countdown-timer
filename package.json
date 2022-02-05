@@ -48,6 +48,10 @@
       {
         "command": "countdown-timer.update_pomodoro_work_time",
         "title": "CountdownTimer: Update Pomodoro Work Time"
+      },
+      {
+        "command": "countdown-timer.update_pomodoro_break_time",
+        "title": "CountdownTimer: Update Pomodoro Break Time"
       }
     ]
   },

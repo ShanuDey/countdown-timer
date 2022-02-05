@@ -1,6 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-const { time } = require('console');
 const { clearInterval } = require('timers');
 const vscode = require('vscode');
 
@@ -13,6 +12,8 @@ const startPomodoroTimerCommandId = 'countdown-timer.startpomodoro';
 const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
 const updatePomodoroWorkTimeCommandId =
   'countdown-timer.update_pomodoro_work_time';
+const updatePomodoroBreakTimeCommandId =
+  'countdown-timer.update_pomodoro_break_time';
 // const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
 let isPomodoroTimerActive = false;
 let pomodoroTimerIntervalId;
@@ -43,6 +44,7 @@ function activate(context) {
   context.subscriptions.push(startPomodoroTimerCommand);
   context.subscriptions.push(stopPomodoroTimerCommand);
   context.subscriptions.push(updatePomodoroWorkTimeCommand);
+  context.subscriptions.push(updatePomodoroBreakTimeCommand);
 
   //on active
   createStatusBar();
@@ -111,6 +113,19 @@ const updatePomodoroWorkTimeCommand = vscode.commands.registerCommand(
     );
     WorkTime = getTimeInSeconds(userInput);
     console.log(WorkTime);
+    restartPomodoroTimer();
+  }
+);
+
+const updatePomodoroBreakTimeCommand = vscode.commands.registerCommand(
+  updatePomodoroBreakTimeCommandId,
+  async function () {
+    const userInput = await getUserInput(
+      'HH:MM:SS in 24 hours format. Example: 00:30:00',
+      validateTime
+    );
+    BreakTime = getTimeInSeconds(userInput);
+    console.log(BreakTime);
     restartPomodoroTimer();
   }
 );
