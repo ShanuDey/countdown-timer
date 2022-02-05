@@ -14,14 +14,11 @@ const updatePomodoroWorkTimeCommandId =
   'countdown-timer.update_pomodoro_work_time';
 const updatePomodoroBreakTimeCommandId =
   'countdown-timer.update_pomodoro_break_time';
-// const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
-let isPomodoroTimerActive = false;
+
 let pomodoroTimerIntervalId;
 let isBreak = false;
 let WorkTime = 1500; // 25 min
 let BreakTime = 300; // 5 min
-
-const unitSeconds = 1000; // 1 sec = 1000 milliseconds
 let timeLeft = 0;
 let timerIntervalId;
 
