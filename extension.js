@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+const { time } = require('console');
 const { clearInterval } = require('timers');
 const vscode = require('vscode');
 
@@ -10,6 +11,8 @@ const hideStatusBarOnIdleCommandId = 'countdown-timer.hidestatusonidle';
 const showStatusBarOnIdleCommandId = 'countdown-timer.showstatusonidle';
 const startPomodoroTimerCommandId = 'countdown-timer.startpomodoro';
 const stopPomodoroTimerCommandId = 'countdown-timer.stoppomodoro';
+const updatePomodoroWorkTimeCommandId =
+  'countdown-timer.update_pomodoro_work_time';
 // const COUNTDOWN_TIMER_KEY = 'shanu-dey-countdown-timer';
 let isPomodoroTimerActive = false;
 let pomodoroTimerIntervalId;
@@ -39,6 +42,7 @@ function activate(context) {
   context.subscriptions.push(showStatusBarItemOnIdleCommand);
   context.subscriptions.push(startPomodoroTimerCommand);
   context.subscriptions.push(stopPomodoroTimerCommand);
+  context.subscriptions.push(updatePomodoroWorkTimeCommand);
 
   //on active
   createStatusBar();
@@ -60,6 +64,9 @@ const setTimerRegisterCommand = vscode.commands.registerCommand(
     const userInput = await getUserInput(
       'HH:MM:SS in 24 hours format. Example: 00:30:00',
       validateTime
+    );
+    vscode.window.showInformationMessage(
+      `Countdown timer is set for ${userInput}  ⬇️`
     );
     manageTimer(userInput);
   }
@@ -92,6 +99,19 @@ const stopPomodoroTimerCommand = vscode.commands.registerCommand(
   function () {
     clearInterval(pomodoroTimerIntervalId);
     updateStatusBar('Not Set');
+  }
+);
+
+const updatePomodoroWorkTimeCommand = vscode.commands.registerCommand(
+  updatePomodoroWorkTimeCommandId,
+  async function () {
+    const userInput = await getUserInput(
+      'HH:MM:SS in 24 hours format. Example: 00:30:00',
+      validateTime
+    );
+    WorkTime = getTimeInSeconds(userInput);
+    console.log(WorkTime);
+    restartPomodoroTimer();
   }
 );
 
@@ -144,9 +164,6 @@ async function getUserInput(placeHolderText, validateInputFunction) {
       return validateInputFunction(text);
     },
   });
-  vscode.window.showInformationMessage(
-    `Countdown timer is set for ${result}  ⬇️`
-  );
   return result;
 }
 
@@ -154,7 +171,7 @@ function manageTimer(targetTime) {
   const statusbarVisibility = statusBar._visible;
   if (statusbarVisibility === false) statusBar.show();
   let currentTimeLeft;
-  timeLeft = getTimeLeftInSeconds(targetTime);
+  timeLeft = getTimeInSeconds(targetTime);
   timerIntervalId = setInterval(() => {
     if (timeLeft < 0) {
       clearInterval(timerIntervalId);
@@ -178,13 +195,13 @@ const getCurrentTimeLeft = () => {
   return `${hh}h ${mm}m ${ss}s`;
 };
 
-const getTimeLeftInSeconds = (targetTime) => {
+const getTimeInSeconds = (targetTime) => {
   const [hh, mm, ss] = targetTime.split(':').map((str) => parseInt(str));
   return hh * 60 + mm * 60 + ss;
 };
 
 const pomodoroTimer = () => {
-  timeLeft = 7;
+  timeLeft = WorkTime;
   pomodoroTimerIntervalId = setInterval(() => {
     if (timeLeft < 0) {
       if (isBreak) {
@@ -196,10 +213,17 @@ const pomodoroTimer = () => {
         timeLeft = BreakTime;
         vscode.window.showInformationMessage('Countdown Timer: Have a break');
       }
+      isBreak = !isBreak;
     }
     updateStatusBar(getCurrentTimeLeft());
     timeLeft--;
   }, 1000);
+};
+
+const restartPomodoroTimer = () => {
+  clearInterval(pomodoroTimerIntervalId);
+  updateStatusBar(`Restarting $(debug-restart)`);
+  pomodoroTimer();
 };
 
 module.exports = {

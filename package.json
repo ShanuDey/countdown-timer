@@ -44,6 +44,10 @@
       {
         "command": "countdown-timer.stoppomodoro",
         "title": "CountdownTimer: Stop Pomodoro mode"
+      },
+      {
+        "command": "countdown-timer.update_pomodoro_work_time",
+        "title": "CountdownTimer: Update Pomodoro Work Time"
       }
     ]
   },
